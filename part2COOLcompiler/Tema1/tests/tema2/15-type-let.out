@@ -1,0 +1,6 @@
+"15-type-let.cl", line 4:18, Semantic error: Type Int of initialization expression of identifier y is incompatible with declared type Int
+"15-type-let.cl", line 8:18, Semantic error: Type C of initialization expression of identifier c is incompatible with declared type C
+One of the operands is null.
+One of the operands is null.
+One of the operands is null.
+Compilation halted

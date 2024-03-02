@@ -1,0 +1,144 @@
+init() ::= <<
+    .data
+    .align  2
+    .globl  class_nameTab
+    .globl  Int_protObj
+    .globl  String_protObj
+    .globl  bool_const0
+    .globl  bool_const1
+    .globl  Main_protObj
+    .globl  _int_tag
+    .globl  _string_tag
+    .globl  _bool_tag
+_int_tag:
+    .word   2
+_string_tag:
+    .word   3
+_bool_tag:
+    .word   4
+>>
+
+bool_const(index, value) ::= <<
+bool_const<index>:
+    .word   4
+    .word   4
+    .word   Bool_dispTab
+    .word   <value>
+>>
+
+int_const(index, value) ::= <<
+int_const<index>:
+    .word   2
+    .word   4
+    .word   Int_dispTab
+    .word   <value>
+>>
+
+str_const(index, length, value, string) ::= <<
+str_const<index>:
+    .word   3
+    .word   <length>
+    .word   String_dispTab
+    .word   <value>
+    .asciiz "<string>"
+    .align  2
+>>
+
+_protObj(value, index) ::= <<
+<value>_protObj:
+    .word   <index>
+    .word   3
+    .word   <value>_dispTab
+>>
+
+directive_name(value, value2) ::= <<
+<value>_init:
+    addiu   $sp $sp -12
+    sw      $fp 12($sp)
+    sw      $s0 8($sp)
+    sw      $ra 4($sp)
+    addiu   $fp $sp 4
+    move    $s0 $a0
+    jal     <value2>_init
+    move    $a0 $s0
+    lw      $fp 12($sp)
+    lw      $s0 8($sp)
+    lw      $ra 4($sp)
+    addiu   $sp $sp 12
+    jr      $ra
+>>
+
+method(class, method) ::= <<
+<class>.<method>:
+    addiu   $sp $sp -12
+    sw      $fp 12($sp)
+    sw      $s0 8($sp)
+    sw      $ra 4($sp)
+    addiu   $fp $sp 4
+    move    $s0 $a0
+    la      $a0 int_const0
+    lw      $fp 12($sp)
+    lw      $s0 8($sp)
+    lw      $ra 4($sp)
+    addiu   $sp $sp 12
+    jr      $ra
+>>
+
+class(classname, parent, features) ::= <<
+    .globl  <classname>_protObj
+    .globl  <classname>_init
+
+    <classname>_protObj:
+        .word   <protObj_value>
+        .word   <tag_value>
+        .word   <dispTab_value>
+    <classname>_init:
+        # ... (initialize method for this class)
+>>
+
+main_class(classname, parent, features) ::= <<
+    .text
+    .globl  <classname>_init
+    .globl  <classname>_main
+
+    <classname>_init:
+        // ... (initialize method for Main class)
+    <classname>_main:
+        addiu   $sp $sp -12
+        sw      $fp 12($sp)
+        sw      $s0 8($sp)
+        sw      $ra 4($sp)
+        addiu   $fp $sp 4
+        move    $s0 $a0
+        la      $a0 int_const0
+        // ... (additional code for Main.main)
+        lw      $fp 12($sp)
+        lw      $s0 8($sp)
+        lw      $ra 4($sp)
+        addiu   $sp $sp 12
+        jr      $ra
+>>
+
+// Define other templates for different features and classes as needed
+literal(value) ::= <<
+    li $a0 <value>
+>>
+
+uminus(e, dStr) ::= <<
+    <e>
+    neg $a0, $a0       <if(dStr)># <dStr><else><endif>
+>>
+
+plus(e1, e2, dStr) ::= <<
+    <e1>
+    sw $a0 0($sp)
+    addiu $sp $sp -4
+    <e2>
+    lw $t1 4($sp)
+    add $a0 $t1 $a0
+    addiu $sp $sp 4     <if(dStr)># <dStr><else><endif>
+>>
+
+
+
+// Define other templates as needed

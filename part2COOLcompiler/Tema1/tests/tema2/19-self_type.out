@@ -1,0 +1,7 @@
+"19-self_type.cl", line 5:11, Semantic error: Method h of class A has formal parameter y with illegal type SELF_TYPE
+One of the operands is null.
+"19-self_type.cl", line 9:18, Semantic error: Type Object of assigned expression is incompatible with declared type SELF_TYPE of identifier x
+"19-self_type.cl", line 10:18, Semantic error: Type Object of assigned expression is incompatible with declared type SELF_TYPE of identifier x
+"19-self_type.cl", line 11:18, Semantic error: Type Object of assigned expression is incompatible with declared type SELF_TYPE of identifier x
+"19-self_type.cl", line 13:18, Semantic error: Type SELF_TYPE of assigned expression is incompatible with declared type Int of identifier u
+Compilation halted
